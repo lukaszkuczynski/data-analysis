@@ -1,7 +1,7 @@
 import argparse
 import requests
 import json
-import pickle
+import csv
 from bs4 import BeautifulSoup
 
 DEVTO_API_ARTICLES_URL = 'https://dev.to/api/articles'
@@ -35,25 +35,28 @@ def get_texts_for_ids(IDs):
         texts.append({
             'id': body['id'],
             'title': body['title'],
-            'text': soup.get_text()
+            'content': soup.get_text()
         })
         log("fetched docs with title '%s'" % body['title'])
     return texts    
 
 
-def pickle_them(args, texts):
+def write_texts_to_csv(args, texts):
     output_filename = args.output
-    with open(output_filename, 'wb') as f:
-        pickle.dump(texts, f)
+    with open(output_filename, 'w', newline='', encoding='utf8') as f:
+        writer = csv.DictWriter(f, fieldnames=['id','title','content'])
+        writer.writeheader()
+        writer.writerows(texts)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--tag", default='python')
+    parser.add_argument("--tag", default='java')
     parser.add_argument("--pages", default=10)
-    parser.add_argument("--output", default='python_posts.pickle')
+    parser.add_argument("--output", default='java_posts.csv')
     args = parser.parse_args()
     ids = get_ids(args)
     texts = get_texts_for_ids(ids)
-    pickle_them(args, texts)
+    # texts = list(texts[:3])
+    write_texts_to_csv(args, texts)
     
 
