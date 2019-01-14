@@ -50,9 +50,9 @@ def write_texts_to_csv(args, texts):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--tag", default='java')
-    parser.add_argument("--pages", default=10)
-    parser.add_argument("--output", default='java_posts.csv')
+    parser.add_argument("--tag", default='python')
+    parser.add_argument("--pages", default=20)
+    parser.add_argument("--output", default='python_posts.csv')
     args = parser.parse_args()
     ids = get_ids(args)
     texts = get_texts_for_ids(ids)
